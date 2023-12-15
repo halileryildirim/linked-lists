@@ -164,6 +164,31 @@ class LinkedList {
     string += "null";
     return string;
   }
+
+  // add a node at given index with value
+  insertAt(index, value) {
+    if (index < 0) {
+      console.log("Review your index input");
+    }
+    const newNode = new Node(value);
+    if (index === 0) {
+      newNode.nextNode = this.headNode;
+      this.headNode = newNode;
+    } else if (index === 1) {
+      newNode.nextNode = this.headNode.nextNode;
+      this.headNode.nextNode = newNode;
+    } else {
+      let prevNode = this.headNode;
+      let currNode = this.headNode.nextNode;
+
+      for (let i = 1; i < index; i += 1) {
+        prevNode = currNode;
+        currNode = currNode.nextNode;
+      }
+      newNode.nextNode = currNode;
+      prevNode.nextNode = newNode;
+    }
+  }
 }
 
 const list = new LinkedList();
@@ -176,7 +201,9 @@ list.prepend(4);
 list.prepend(5);
 list.prepend(6);
 
-list.pop();
+list.insertAt(3, 31);
+
+// list.pop();
 
 console.log(list.headNode);
 console.log(list.headNode.nextNode);
@@ -184,13 +211,16 @@ console.log(list.headNode.nextNode.nextNode);
 console.log(list.headNode.nextNode.nextNode.nextNode);
 console.log(list.headNode.nextNode.nextNode.nextNode.nextNode);
 console.log(list.headNode.nextNode.nextNode.nextNode.nextNode.nextNode);
+console.log(
+  list.headNode.nextNode.nextNode.nextNode.nextNode.nextNode.nextNode
+);
 
-list.append(3);
+// list.append(3);
 
-console.log(list.size());
-console.log(list.head());
-console.log(list.tail());
-console.log(list.at(2));
-console.log(list.contains(4));
-console.log(list.find(3));
-console.log(list.toString());
+// console.log(list.size());
+// console.log(list.head());
+// console.log(list.tail());
+// console.log(list.at(2));
+// console.log(list.contains(4));
+// console.log(list.find(3));
+// console.log(list.toString());
