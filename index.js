@@ -119,7 +119,7 @@ class LinkedList {
         }
         prevNode.nextNode = null;
       }
-    } else return console.log("List is already empty");
+    } else console.log("List is already empty");
   }
 
   // search the list for given value return true if the list contains the value
@@ -167,60 +167,90 @@ class LinkedList {
 
   // add a node at given index with value
   insertAt(index, value) {
+    // prevent from wrong input
     if (index < 0) {
       console.log("Review your index input");
-    }
-    const newNode = new Node(value);
-    if (index === 0) {
-      newNode.nextNode = this.headNode;
-      this.headNode = newNode;
-    } else if (index === 1) {
-      newNode.nextNode = this.headNode.nextNode;
-      this.headNode.nextNode = newNode;
     } else {
+      // create the newNode with input
+      const newNode = new Node(value);
+      // create special cases for headNode like index 0, 1
+      if (index === 0) {
+        newNode.nextNode = this.headNode;
+        this.headNode = newNode;
+      } else if (index === 1) {
+        newNode.nextNode = this.headNode.nextNode;
+        this.headNode.nextNode = newNode;
+      } else {
+        // if index is >=2 keep a track of previous node to link the nextNode of them with newNode
+        let prevNode = this.headNode;
+        let currNode = this.headNode.nextNode;
+        // start at 1 because 0 and 1 cases are handled
+        for (let i = 1; i < index; i += 1) {
+          prevNode = currNode;
+          currNode = currNode.nextNode;
+        }
+        newNode.nextNode = currNode;
+        prevNode.nextNode = newNode;
+      }
+    }
+  }
+
+  // remove a node at given index
+  removeAt(index) {
+    // prevent from wrong input
+    if (index < 0) {
+      console.log("Review your index input");
+    } else if (index === 0) {
+      // special cases for 0 and 1
+      let tempNode = this.headNode.nextNode;
+      this.headNode = this.headNode.nextNode;
+      while (tempNode.nextNode != null) {
+        tempNode = tempNode.nextNode;
+      }
+    } else if (index === 1) {
+      let tempNode = this.headNode.nextNode.nextNode;
+      this.headNode.nextNode = this.headNode.nextNode.nextNode;
+      while (tempNode.nextNode != null) {
+        tempNode = tempNode.nextNode;
+      }
+    } else {
+      // store previous and current node to detect and traverse to the node and link the current's next, which removes the current from the list.
       let prevNode = this.headNode;
       let currNode = this.headNode.nextNode;
-
+      // start at 1 because of 0, 1 special cases
       for (let i = 1; i < index; i += 1) {
         prevNode = currNode;
         currNode = currNode.nextNode;
       }
-      newNode.nextNode = currNode;
-      prevNode.nextNode = newNode;
+      prevNode.nextNode = currNode.nextNode;
     }
   }
 }
 
 const list = new LinkedList();
 
-list.append(1);
-list.append(2);
-list.append(3);
+list.append(1); // 1,null
+list.append(2); // 1,2,null
+list.append(3); // 1,2,3,null
 
-list.prepend(4);
-list.prepend(5);
-list.prepend(6);
+list.prepend(4); // 4,1,2,3,null
+list.prepend(5); // 5,4,1,2,3,null
+list.prepend(6); // 6,5,4,1,2,3,null
 
-list.insertAt(3, 31);
+list.pop(); // 6,5,4,1,2,null
 
-// list.pop();
+list.insertAt(4, 35); // 6,5,4,1,35,2,null
 
-console.log(list.headNode);
-console.log(list.headNode.nextNode);
-console.log(list.headNode.nextNode.nextNode);
-console.log(list.headNode.nextNode.nextNode.nextNode);
-console.log(list.headNode.nextNode.nextNode.nextNode.nextNode);
-console.log(list.headNode.nextNode.nextNode.nextNode.nextNode.nextNode);
-console.log(
-  list.headNode.nextNode.nextNode.nextNode.nextNode.nextNode.nextNode
-);
+list.removeAt(4); // 6,5,4,1,2,null
 
-// list.append(3);
+list.append(3); // 6,5,4,1,2,3,null
 
-// console.log(list.size());
-// console.log(list.head());
-// console.log(list.tail());
-// console.log(list.at(2));
-// console.log(list.contains(4));
-// console.log(list.find(3));
-// console.log(list.toString());
+console.log(list.size()); // 6
+console.log(list.head()); // 6
+console.log(list.tail()); // 3
+console.log(list.at(2)); // 4
+console.log(list.contains(4)); // true
+console.log(list.contains(-3)); // false
+console.log(list.find(3)); // 5
+console.log(list.find(57)); // null
+console.log(list.toString()); // ( 6 ) -> ( 5 ) -> ( 4 ) -> ( 1 ) -> ( 2 ) -> ( 3 ) -> null
